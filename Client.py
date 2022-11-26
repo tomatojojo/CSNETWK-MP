@@ -23,7 +23,9 @@ client.sendto(f"Online Tag:{name}".encode(), ("localhost", 3000))
 while True:
     message = input("")
     if message == "!q":
+        print("Left the chat...")
         exit()
+        
     else:
         client.sendto(f"{name}: {message}".encode(), ("localhost", 3000))
 
