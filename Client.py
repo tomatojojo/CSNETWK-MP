@@ -18,7 +18,7 @@ def receive():
 t = threading.Thread(target=receive)
 t.start()
 
-client.sendto(f"Online Tag:{name}".encode(), ("localhost", 3000))
+client.sendto(f"Online Tag: {name}".encode(), ("localhost", 3000))
 
 while True:
     message = input("")
