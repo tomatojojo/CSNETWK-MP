@@ -1,9 +1,10 @@
 import socket
 import threading
 import random
+import json
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-client.bind(("localhost", random.randint(8000,9000)))
+client.bind(("localhost", random.randint(8000,9000))) #ig this is not needed? since the server is already binded and theres port numbers nman
 
 name = input("Nickname: ")
 
@@ -18,7 +19,7 @@ def receive():
 t = threading.Thread(target=receive)
 t.start()
 
-client.sendto(f"Online Tag: {name}".encode(), ("localhost", 3000))
+client.sendto(f"Online Tag: {name}".encode(), ("localhost", 3000)) #localhost, 3000 should be in func so they can input custom IP and port number
 
 while True:
     message = input("")
