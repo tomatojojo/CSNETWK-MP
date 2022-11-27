@@ -8,6 +8,15 @@ client.bind(("localhost", random.randint(8000,9000))) #ig this is not needed? si
 
 name = input("Nickname: ")
 
+def helperCall():
+    print("List of Commands: \n")
+    print("/join <server ip addr> <port> - connects to the server \n")
+    print("/leave - leaves the chat \n")
+    print("/register <handle> - set a handle or a nickname \n")
+    print("/all - messages all clients connected in the server \n")
+    print("/msg <handle> - messages to another client privately rather than all clients \n")
+    print("/? - list of commands \n")
+
 def receive():
     while True:
         try:
