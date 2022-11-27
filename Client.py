@@ -35,7 +35,8 @@ while True:
     if message == "!leave":
         print("Left the chat...")
         exit()
-        
+    elif message == "/?":
+        helperCall()
     else:
         client.sendto(f"{name}: {message}".encode(), ("localhost", 3000))
 
