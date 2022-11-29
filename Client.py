@@ -1,6 +1,7 @@
 import socket
 import threading
 import random
+import json
 
 joined = false;
 
@@ -43,9 +44,18 @@ print(msg)
 
 '''
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-client.bind(("localhost", random.randint(8000,9000)))
+client.bind(("localhost", random.randint(8000,9000))) #ig this is not needed? since the server is already binded and theres port numbers nman
 
 name = input("Nickname: ")
+
+def helperCall():
+    print("List of Commands: \n")
+    print("/join <server ip addr> <port> - connects to the server \n")
+    print("/leave - leaves the chat \n")
+    print("/register <handle> - set a handle or a nickname \n")
+    print("/all - messages all clients connected in the server \n")
+    print("/msg <handle> - messages to another client privately rather than all clients \n")
+    print("/? - list of commands \n")
 
 def receive():
     while True:
@@ -58,14 +68,15 @@ def receive():
 t = threading.Thread(target=receive)
 t.start()
 
-client.sendto(f"Online Tag: {name}".encode(), ("localhost", 3000))
+client.sendto(f"Online Tag: {name}".encode(), ("localhost", 3000)) #localhost, 3000 should be in func so they can input custom IP and port number
 
 while True:
     message = input("")
-    if message == "!q":
+    if message == "!leave":
         print("Left the chat...")
         exit()
-        
+    elif message == "/?":
+        helperCall()
     else:
         client.sendto(f"{name}: {message}".encode(), ("localhost", 3000))
 '''
