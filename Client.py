@@ -3,7 +3,7 @@ import threading
 import random
 import json
 
-joined = false;
+joined = false
 
 
 while not joined:
