@@ -2,10 +2,19 @@ import socket
 import threading
 import random
 import json
+join_command = {"command": "join"}
+leave_command = {"command": "leave"}
+register_command = {"command": "register", "handle": "handle"}
+all_message_command = {"command": "all", "message": "message"}
+direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
+error_command = {"command": "error", "message": "message"}
+
 
 joined = False
 
+UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
+'''
 while not joined:
     command = input()
     command.split()
@@ -21,21 +30,34 @@ while not joined:
         print("Error: Disconnection failed. Please connect to the server first.")
     else:
         print("Error: Command not found.")
+'''
+while not joined:
+    command = input()
+    command = command.split()
+    if command[0] == "/join":
+        try:
+            ip_adress = command[1]
+            host = int(command[2])
+            UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+        except:
+            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+        finally:
+            #testing purposes to see if connected sa server
+            msgFromClient       = "Hello UDP Server"
+            bytesToSend         = str.encode(msgFromClient)
+            serverAddressPort   = ("127.0.0.1", 3000)
+            bufferSize          = 4096
+            UDPClientSocket.sendto(bytesToSend, serverAddressPort)
+    
 
 
 
+    
+
+        
 
 
-msgFromClient       = "Hello UDP Server"
-bytesToSend         = str.encode(msgFromClient)
-serverAddressPort   = ("127.0.0.1", 3000)
-bufferSize          = 4096
 
-
-UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-
-msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
 
 msg = "Message from Server {}".format(msgFromServer[0])
