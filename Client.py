@@ -15,13 +15,13 @@ joined = False
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def helperCall():
-    print("List of Commands: \n")
-    print("/join <server ip addr> <port> - connects to the server \n")
-    print("/leave - leaves the chat \n")
-    print("/register <handle> - set a handle or a nickname \n")
-    print("/all - messages all clients connected in the server \n")
-    print("/msg <handle> - messages to another client privately rather than all clients \n")
-    print("/? - list of commands \n")
+    print("\nList of Commands: ")
+    print("/join <server ip addr> <port>    - connects to the server ")
+    print("/leave                           - leaves the chat ")
+    print("/register <handle>               - set a handle or a nickname ")
+    print("/all                             - messages all clients connected in the server ")
+    print("/msg <handle>                    - messages to another client privately rather than all clients ")
+    print("/?                               - list of commands ")
 
 '''
 while not joined:
@@ -57,6 +57,8 @@ while not joined:
             serverAddressPort   = ("127.0.0.1", 3000)
             bufferSize          = 1024
             UDPClientSocket.sendto(bytesToSend, serverAddressPort)
+    elif command[0] == "/?":
+        helperCall()
     
 
 
