@@ -6,7 +6,7 @@ import json
 
 localIP = "127.0.0.1"
 localPort = 3000
-bufferSize = 4096
+bufferSize = 1024
 serverMessage = "Hello World"
 bytesCount = str.encode(serverMessage)
 

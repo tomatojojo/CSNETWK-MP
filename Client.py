@@ -14,6 +14,15 @@ joined = False
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
+def helperCall():
+    print("List of Commands: \n")
+    print("/join <server ip addr> <port> - connects to the server \n")
+    print("/leave - leaves the chat \n")
+    print("/register <handle> - set a handle or a nickname \n")
+    print("/all - messages all clients connected in the server \n")
+    print("/msg <handle> - messages to another client privately rather than all clients \n")
+    print("/? - list of commands \n")
+
 '''
 while not joined:
     command = input()
@@ -46,7 +55,7 @@ while not joined:
             msgFromClient       = "Hello UDP Server"
             bytesToSend         = str.encode(msgFromClient)
             serverAddressPort   = ("127.0.0.1", 3000)
-            bufferSize          = 4096
+            bufferSize          = 1024
             UDPClientSocket.sendto(bytesToSend, serverAddressPort)
     
 
@@ -69,15 +78,6 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client.bind(("localhost", random.randint(8000,9000))) #ig this is not needed? since the server is already binded and theres port numbers nman
 
 name = input("Nickname: ")
-
-def helperCall():
-    print("List of Commands: \n")
-    print("/join <server ip addr> <port> - connects to the server \n")
-    print("/leave - leaves the chat \n")
-    print("/register <handle> - set a handle or a nickname \n")
-    print("/all - messages all clients connected in the server \n")
-    print("/msg <handle> - messages to another client privately rather than all clients \n")
-    print("/? - list of commands \n")
 
 def receive():
     while True:
