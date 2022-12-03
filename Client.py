@@ -43,6 +43,7 @@ while not joined:
 while not joined:
     command = input()
     command = command.split()
+    print("Enter command: ")
     if command[0] == "/join":
         try:
             ip_adress = command[1]
