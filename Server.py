@@ -17,6 +17,9 @@ threading.Thread(target=receive)
 print("UDP Server is online")
 print("Waiting for client...")
 
+def serverUnicast():
+    serverSocket.sendto(receiveMessage, address)
+
 while(True):
     bytesAddress, clientSend = socketUDP.recvfrom(bufferSize)
     messageDecode = bytesAddress.decode()
@@ -36,7 +39,7 @@ while(True):
             messageInputs = {
                 "command": inputs[0],
             }
-            
+
 
     socketUDP.sendto(bytesCount, address)
 

@@ -44,6 +44,8 @@ def clientReceiver():
 
             elif(receiver["command"] == "msg"):
                 print("idk")
+            else:
+                print("error", "Unrecognized command format")
             
 
         except:
