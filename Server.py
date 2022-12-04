@@ -34,11 +34,12 @@ while(True):
 
     messageJson = json.loads(messageDecode)
 
-    if(messageJson["command"] == "/join"):
-        if(inputs[0] == "/join"):
-            messageInputs = {
-                "command": inputs[0],
-            }
+    
+    # if(messageJson["command"] == "/join"):
+    #     if(inputs[0] == "/join"):
+    #         messageInputs = {
+    #             "command": inputs[0],
+    #         }
 
 
     socketUDP.sendto(bytesCount, address)

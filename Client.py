@@ -70,4 +70,7 @@ while not joined:
 
     elif command[0] == "/?":
         helperCall()
+        
+    else:
+        print("Please enter a proper command.")
 
