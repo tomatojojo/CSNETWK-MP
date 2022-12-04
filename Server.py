@@ -7,8 +7,6 @@ import json
 localIP = "127.0.0.1"
 localPort = 3000
 bufferSize = 1024
-serverMessage = "Hello World"
-bytesCount = str.encode(serverMessage)
 
 socketUDP = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 socketUDP.bind((localIP, localPort))

@@ -62,15 +62,18 @@ while not joined:
             ip_adress = command[1]
             host = int(command[2])
             UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
-
-            joined = True
-
         except socket.gaierror:
             print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
 
     elif command[0] == "/?":
         helperCall()
-        
+        joined = true
     else:
         print("Please enter a proper command.")
 
+while joined: 
+    command = input()
+    command = command.split()
+    ip_adress = command[1]
+    host = int(command[2])
+    UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
