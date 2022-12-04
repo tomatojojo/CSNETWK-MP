@@ -14,7 +14,7 @@ user_exists_cmd = {"command":"ret_code", "code_no": 502}
 users = []
 
 #Set variables for listening address and listening port
-listening_address='172.16.0.20'
+listening_address='127.0.0.1'
 listening_port=7190
 
 # Create a UDP socket
@@ -45,7 +45,7 @@ while connected:
        #it returns code_no:502
        else:
           user_exists = json.dumps(user_exists_cmd)
-       	  sock.sendto(bytes(user_exists, "utf-8"), address)
+          sock.sendto(bytes(user_exists, "utf-8"), address)
           connected = True
 
     elif command['command'] == "deregister":
