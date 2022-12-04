@@ -43,7 +43,6 @@ while not joined:
 while not joined:
     command = input()
     command = command.split()
-    print("Enter command: ")
     if command[0] == "/join":
         try:
             ip_adress = command[1]
@@ -58,12 +57,15 @@ while not joined:
             serverAddressPort   = ("127.0.0.1", 3000)
             bufferSize          = 1024
             UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-
+            joined == True
     elif command[0] == "/?":
         helperCall()
     elif command[0] == "/leave":
         print("Error: Disconnection failed. Please connect to the server first.")
+
+while joined:
     
+
 
     
 
