@@ -12,11 +12,14 @@ bytesCount = str.encode(serverMessage)
 
 socketUDP = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 socketUDP.bind((localIP, localPort))
+threading.Thread(target=receive)
 
 print("UDP Server is online")
+print("Waiting for client...")
 
 while(True):
-    bytesAddress = socketUDP.recvfrom(bufferSize)
+    bytesAddress, clientSend = socketUDP.recvfrom(bufferSize)
+    messageDecode = bytesAddress.decode()
     message = bytesAddress[0]
     address = bytesAddress[1]
 
@@ -25,6 +28,15 @@ while(True):
 
     print(clientMsg)
     print(clientIP)
+
+    messageJson = json.loads(messageDecode)
+
+    if(messageJson["command"] == "/join"):
+        if(inputs[0] == "/join"):
+            messageInputs = {
+                "command": inputs[0],
+            }
+            
 
     socketUDP.sendto(bytesCount, address)
 
