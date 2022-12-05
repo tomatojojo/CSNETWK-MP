@@ -1,47 +1,35 @@
 import socket
-import threading
-import queue
 import json
+import queue
 
+localIP     = "127.0.0.1"
+localPort   = 20001
+bufferSize  = 1024
+handles = []
+address = []
+messages = queue.Queue()
+# Create a datagram socket
+UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+# Bind to address and ip
+UDPServerSocket.bind((localIP, localPort))
+print("UDP server up and listening")
 
-localIP = "127.0.0.1"
-localPort = 3000
-bufferSize = 1024
-
-socketUDP = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-socketUDP.bind((localIP, localPort))
-threading.Thread(target=receive)
-
-print("UDP Server is online")
-print("Waiting for client...")
-
-def serverUnicast():
-    serverSocket.sendto(receiveMessage, address)
-
-while(True):
-    bytesAddress, clientSend = socketUDP.recvfrom(bufferSize)
-    messageDecode = bytesAddress.decode()
-    message = bytesAddress[0]
-    address = bytesAddress[1]
-
-    clientMsg = "Message from Client: {}".format(message)
-    clientIP ="Client IP Address: {}".format(address)
-
-    print(clientMsg)
-    print(clientIP)
-
-    messageJson = json.loads(messageDecode)
-
-    
-    # if(messageJson["command"] == "/join"):
-    #     if(inputs[0] == "/join"):
-    #         messageInputs = {
-    #             "command": inputs[0],
-    #         }
-
-
-    socketUDP.sendto(bytesCount, address)
-
+while True:
+    try:
+        data, address = UDPServerSocket.recvfrom(bufferSize)
+    except:
+        pass
+    finally:
+        json_data = json.loads(data.decode("utf-8"))
+        print("Received message: ", data, "\n from ", address)
+        if json_data["command"] == "/join":
+            command = bytes(json.dumps({"command": "join"}), "utf-8")
+            UDPServerSocket.sendto(command, address)
+        if json_data["command"] == "/register":
+            if json_data["handle"] in handles:
+                command = bytes(json.dumps({"command": "error", "message": "Error: Registration failed. Handle or alias already exists."}), "utf-8")
+            else:
+                pass #will change
 
 '''
 messages = queue.Queue()

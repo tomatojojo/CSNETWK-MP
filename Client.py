@@ -1,8 +1,10 @@
 import socket
-import threading
-import random
 import json
-
+'''
+msgFromClient       = "Hello UDP Server"
+bytesToSend         = str.encode(msgFromClient)
+serverAddressPort   = ("127.0.0.1", 20001)
+'''
 join_command = {"command": "join"}
 leave_command = {"command": "leave"}
 register_command = {"command": "register", "handle": "handle"}
@@ -10,12 +12,11 @@ all_message_command = {"command": "all", "message": "message"}
 direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
 error_command = {"command": "error", "message": "message"}
 
-BUFFER_SIZE = 1024
-connectIP = None
-connectPort = None
-
+bufferSize = 1024
 joined = False
+registered = False
 
+# Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def helperCall():
@@ -27,35 +28,21 @@ def helperCall():
     print("/msg <handle>                    - messages to another client privately rather than all clients ")
     print("/?                               - list of commands ")
 
-def clientReceiver():
+def receive():
     while True:
         try:
-            receiveMessage = UDPClientSocket.recvfrom(BUFFER_SIZE)[0].decode()
-            receiver = json.loads(receiveMessage)
-
-            if(receiver["command"] == "join"):
-                print("Connection to the Message Board Server is successful.")
-
-            elif(receiver["command"] == "leave"):
-                print("Connection closed. Thank you.")
-
-            elif(receiver["command"] == "register"):
-                print("Welcome " + "insert handle here")
-
-            elif(receiver["command"] == "msg"):
-                print("idk")
-            else:
-                print("error", "Unrecognized command format")
-            
-
+            message, _ = UDPClientSocket.recvfrom(1024)
         except:
             pass
-
+        finally:
+            json_data = json.loads(data.decode("utf-8"))
+            if json_data["command"] == "join":
+                print("Connection to the Message Board Server is successful!")
 
 
 
 while not joined:
-    command = input()
+    command = input("Enter /join <ip adress> <portnum> to join a server")
     command = command.split()
     if command[0] == "/join":
         try:
@@ -64,16 +51,24 @@ while not joined:
             UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
         except socket.gaierror:
             print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-
+        finally:
+            joined = True
     elif command[0] == "/?":
         helperCall()
-        joined = true
-    else:
-        print("Please enter a proper command.")
+    elif command[0] =="/leave":
+        print("Error: Disconnection failed. Please connect to the server first.")
+    elif command[0] =="/register":
+        print("Please connect to the server first before creating a handle")
+    elif command[0] =="/all" or command[0] =="/msg":
+        print("Please connect to the server first before sending a message")
 
-while joined: 
-    command = input()
+while joined and not registered:
+    command = input("Enter /register <handle> to join a server")
     command = command.split()
-    ip_adress = command[1]
-    host = int(command[2])
-    UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+    if command[0] == "/register":
+        if command[2] != "":
+            print("A second name is not needed")
+        else:
+            register_command["handle"] = command[1]
+            UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+            
