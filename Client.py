@@ -1,5 +1,6 @@
 import socket
 import json
+import threading
 '''
 msgFromClient       = "Hello UDP Server"
 bytesToSend         = str.encode(msgFromClient)
@@ -31,28 +32,26 @@ def helperCall():
 def receive():
     while True:
         try:
-            message, _ = UDPClientSocket.recvfrom(1024)
+            data, _ = UDPClientSocket.recvfrom(1024)
         except:
             pass
-        finally:
+        else:
             json_data = json.loads(data.decode("utf-8"))
             if json_data["command"] == "join":
-                print("Connection to the Message Board Server is successful!")
-
-
+                print("Connection to the Message Board Server is successful!")             
+t1 = threading.Thread(target=receive)
+t1.start()   
 
 while not joined:
-    command = input("Enter /join <ip adress> <portnum> to join a server")
+    command = input("Enter /join <ip adress> <portnum> to join a server \n")
     command = command.split()
     if command[0] == "/join":
-        try:
-            ip_adress = command[1]
-            host = int(command[2])
-            UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
-        except:
-            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-        finally:
-            joined = True
+        
+        ip_adress = command[1]
+        host = int(command[2])
+        print(type(command[1]), type(command[2]))
+        UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+
     elif command[0] == "/?":
         helperCall()
     elif command[0] =="/leave":
@@ -71,4 +70,7 @@ while joined and not registered:
         else:
             register_command["handle"] = command[1]
             UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+
+t1 = threading.Thread(target=receive)
+t1.start()
             

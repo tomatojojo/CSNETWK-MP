@@ -2,8 +2,6 @@ import socket
 import json
 import queue
 
-<<<<<<< Updated upstream
-=======
 #Json Commands
 join_command = {"command": "join"}
 leave_command = {"command": "leave"}
@@ -12,20 +10,16 @@ all_message_command = {"command": "all", "message": "message"}
 direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
 error_command = {"command": "error", "message": "message"}
 
-
-localIP     = "127.0.0.1"
-localPort   = 20001
->>>>>>> Stashed changes
 bufferSize  = 1024
 handles = []
 port_address = []
 messages = queue.Queue()
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+print("UDP server up and listening")
 # Bind to address and ip
 UDPServerSocket.bind(("127.0.0.1", 12345))
-print("UDP server up and listening")
-
 while True:
     try:
         data, address = UDPServerSocket.recvfrom(bufferSize)
