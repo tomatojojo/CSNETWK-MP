@@ -2,9 +2,23 @@ import socket
 import json
 import queue
 
+<<<<<<< Updated upstream
+=======
+#Json Commands
+join_command = {"command": "join"}
+leave_command = {"command": "leave"}
+register_command = {"command": "register", "handle": "handle"}
+all_message_command = {"command": "all", "message": "message"}
+direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
+error_command = {"command": "error", "message": "message"}
+
+
+localIP     = "127.0.0.1"
+localPort   = 20001
+>>>>>>> Stashed changes
 bufferSize  = 1024
 handles = []
-address = []
+port_address = []
 messages = queue.Queue()
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -27,7 +41,10 @@ while True:
             if json_data["handle"] in handles:
                 command = bytes(json.dumps({"command": "error", "message": "Error: Registration failed. Handle or alias already exists."}), "utf-8")
             else:
-                pass #will change
+                handles.append(json_data["handle"])
+                port_address.append(address)
+                print(handles)
+                print(port_address)
 
 '''
 messages = queue.Queue()
