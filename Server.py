@@ -16,10 +16,11 @@ port_address = []
 messages = queue.Queue()
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
+UDPServerSocket.bind(("127.0.0.1", 12345))
 print("UDP server up and listening")
 # Bind to address and ip
-UDPServerSocket.bind(("127.0.0.1", 12345))
+
+
 while True:
     try:
         data, address = UDPServerSocket.recvfrom(bufferSize)
@@ -28,17 +29,29 @@ while True:
     finally:
         json_data = json.loads(data.decode("utf-8"))
         print("Received message: ", data, "\n from ", address)
-        if json_data["command"] == "/join":
+        if json_data["command"] == "join":
             command = bytes(json.dumps({"command": "join"}), "utf-8")
             UDPServerSocket.sendto(command, address)
-        if json_data["command"] == "/register":
+            print("message sent")
+        elif json_data["command"] == "register":
             if json_data["handle"] in handles:
                 command = bytes(json.dumps({"command": "error", "message": "Error: Registration failed. Handle or alias already exists."}), "utf-8")
+                UDPServerSocket.sendto(command, address)
             else:
                 handles.append(json_data["handle"])
                 port_address.append(address)
+                name = json_data["handle"]
                 print(handles)
                 print(port_address)
+                
+                for pa in port_address:
+                    welcome = "Welcome " + name
+                    welcome_bytes = str.encode(welcome)
+                    UDPServerSocket.sendto(command, pa)
+                    
+                    
+                
+
 
 '''
 messages = queue.Queue()
