@@ -2,8 +2,6 @@ import socket
 import json
 import queue
 
-localIP     = "127.0.0.1"
-localPort   = 20001
 bufferSize  = 1024
 handles = []
 address = []
@@ -11,7 +9,7 @@ messages = queue.Queue()
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 # Bind to address and ip
-UDPServerSocket.bind((localIP, localPort))
+UDPServerSocket.bind(("127.0.0.1", 12345))
 print("UDP server up and listening")
 
 while True:
