@@ -14,13 +14,16 @@ bufferSize  = 1024
 handles = []
 port_address = []
 messages = queue.Queue()
+serverIPAdd = "127.0.0.1"
+serverPortNum = 12345
+
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPServerSocket.bind(("127.0.0.1", 12345))
+UDPServerSocket.bind((serverIPAdd, serverPortNum))
 print("UDP server up and listening")
 # Bind to address and ip
 
-#pass client message as param
+#pass client message as param for this func (change word and clientMessage since they are just placeholders)
 def emotes(clientMessage):
     emote = {
         ":heart" : "❤️",
