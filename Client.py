@@ -123,7 +123,7 @@ while joined and not registered:
             UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
 
 while joined and registered:
-    command = input("Enter command or message: \n")
+    command = input("Enter command: \n")
     command = command.split()
 
     if command[0] == "/leave":
