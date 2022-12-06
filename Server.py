@@ -20,6 +20,18 @@ UDPServerSocket.bind(("127.0.0.1", 12345))
 print("UDP server up and listening")
 # Bind to address and ip
 
+#pass client message as param
+def emotes(clientMessage):
+    emote = {
+        ":heart" : "❤️",
+        ":laugh" : "😂",
+        ":surprised" : "😮",
+        ":sad" : "😔",
+        ":angry" : "😠"
+    }
+
+    return ' '.join(str(emote.get(word, word)) for word in clientMessage)
+
 
 while True:
     try:

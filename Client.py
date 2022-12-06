@@ -22,13 +22,17 @@ registered = False
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def helperCall():
-    print("\nList of Commands: ")
-    print("/join <server ip addr> <port>    - connects to the server ")
-    print("/leave                           - leaves the chat ")
-    print("/register <handle>               - set a handle or a nickname ")
-    print("/all                             - messages all clients connected in the server ")
-    print("/msg <handle>                    - messages to another client privately rather than all clients ")
-    print("/?                               - list of commands ")
+    print("\n---------------------------------------------------------------------------------------------------------")
+    print("|   List of Commands:                |    Function                                                      |")
+    print("|-------------------------------------------------------------------------------------------------------|")
+    print("|   /join <server ip addr> <port>    |    connects to the server                                        |")
+    print("|   /leave                           |    leaves the chat                                               |")
+    print("|   /register <handle>               |    set a handle or a nickname                                    |")
+    print("|   /all                             |    messages all clients connected in the server                  |")
+    print("|   /msg <handle>                    |    messages to another client privately rather than all clients  |")
+    print("|   /?                               |    list of commands                                              |")
+    print("---------------------------------------------------------------------------------------------------------")
+    print("\n")
 
 def receive_join():
     while True:
