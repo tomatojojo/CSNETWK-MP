@@ -137,6 +137,7 @@ while joined and registered:
         #insert broadcast and pass its params here
         broadcast()
     elif command[0] == "/msg":
+        #insert unicast and pass its params here
         unicast()
     #else assumes hindi nag type si user ng slash / command stuff
     else:
