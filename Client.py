@@ -16,6 +16,7 @@ error_command = {"command": "error", "message": "message"}
 
 bufferSize = 1024
 joined = False
+global registered
 registered = False
 
 # Create a UDP socket at client side
@@ -36,23 +37,27 @@ def helperCall():
 
 def receive_join():
     while True:
-        try:
-            data = UDPClientSocket.recvfrom(1024)
-            #json_data = json.loads(data.decode("utf-8"))
-            print("Connection to the Message Board Server is successful!") 
-            return True
-        except:
-            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.") 
-            return False
+            try:
+                data, _ = UDPClientSocket.recvfrom(1024)
+                #json_data = json.loads(data.decode("utf-8"))
+                data = data.decode()
+                print(data) 
+                return True
+            except:
+                print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
         
 def receive():
     while True:
-            data= UDPClientSocket.recvfrom(1024)
-            json_data = json.loads(data.decode("utf-8"))
-            if json_data["command"] == "error":
-                print(json_data["error"])
-            else:
-                print("")
+            data, _ = UDPClientSocket.recvfrom(1024)
+            data = data.decode()
+            data_splitted = data.split()
+            if data_splitted[0] == "Error:":
+                print(data)
+                registered = False
+            elif data_splitted[0] == "Welcome!":
+                print(data)
+                registered = True
+
 
 #pass params to this func
 def broadcast():
@@ -86,62 +91,83 @@ def unicast():
     return senderResponse
 
 
-
-while joined == False:
-    command = input("Enter /join <ip adress> <portnum> to join a server \n")
-    command = command.split()
-    if command[0] == "/join":
-        ip_adress = command[1]
-        try:
-            host = int(command[2])
-            UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
-        except:
-            pass
-        joined = receive_join()
-    elif command[0] == "/?":
-        helperCall()
-    elif command[0] =="/leave":
-        print("Error: Disconnection failed. Please connect to the server first.")
-    elif command[0] =="/register":
-        print("Please connect to the server first before creating a handle")
-    elif command[0] =="/all" or command[0] =="/msg":
-        print("Please connect to the server first before sending a message")
-
-t1 = threading.Thread(target=receive)
-t1.start()
-
-while joined and not registered:
-    command = input("Enter /register <handle> to join a server \n")
-    numwords = len(re.findall(r'\w+', command))
-    print(numwords)
-    command = command.split()
-    if command[0] == "/register":
-        if numwords >= 3:
-            print("Only input the very first name")
+while True:
+    while joined == False:
+        command = input("Enter /join <ip adress> <portnum> to join a server \n")
+        numwords = len(re.findall(r'\w+', command))
+        command = command.split()
+        if command[0] == "/join":
+            if numwords > 3:
+                print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+            else:
+                ip_adress = command[1]
+                try:
+                    host = int(command[2])
+                    UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+                    joined = receive_join()
+                except:
+                    print("Error: Command parameters do not match or is not allowed.")
+                
+        elif command[0] == "/?":
+            helperCall()
+        elif command[0] =="/leave":
+            print("Error: Disconnection failed. Please connect to the server first.")
+        elif command[0] =="/register":
+            print("Please connect to the server first before creating a handle")
+        elif command[0] =="/all" or command[0] =="/msg":
+            print("Please connect to the server first before sending a message")
         else:
-            register_command["handle"] = command[1]
-            UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+            print("Error: Command not found.")
 
-while joined and registered:
-    command = input("Enter command: \n")
-    command = command.split()
+    t1 = threading.Thread(target=receive)
+    t1.start()
 
-    if command[0] == "/leave":
-        #insert serverPort and serverIP to None or 0
-        print("Successfully disconnected from the server.")
-    elif command[0] == "/register":
-        print("Error: You are already registered!")
-    elif command[0] == "/join":
-        print("Error: You are already connected to the server.")
-    elif command[0] == "/all":
-        #insert broadcast and pass its params here
-        broadcast()
-    elif command[0] == "/msg":
-        #insert unicast and pass its params here
-        unicast()
-    #else assumes hindi nag type si user ng slash / command stuff
-    else:
-        print("Error: Please input a proper command or type '/?' to check the list of commands.")
-    
-    
+    while joined and not registered:
+        command = input("Enter /register <handle> to join a server \n")
+        numwords = len(re.findall(r'\w+', command))
+        command = command.split()
+        if command[0] == "/register":
+            if numwords >= 3:
+                print("Only input the very first name")
+            else:
+                register_command["handle"] = command[1]
+                UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+        elif command[0] == "/leave":
+            joined = False
+            UDPClientSocket.sendto(bytes(json.dumps(leave_command), "utf-8"), (ip_adress, host))
+        elif command[0] == "/join":
+            print("You are already connected to the server")
+        elif command[0] == "/all" or command[0] == "/msg":
+            print("Register first in order to send a message")
+        else:
+            print("Command does not exist")
+
+
+
+    while joined and registered:
+        command = input("Enter command: \n")
+        numwords = len(re.findall(r'\w+', command))
+        command = command.split()
+
+        if command[0] == "/leave":
+            #insert serverPort and serverIP to None or 0
+            UDPClientSocket.sendto(bytes(json.dumps(leave_command), "utf-8"), (ip_adress, host))
+        
+        elif command[0] == "/register":
+            print("Error: You are already registered!")
+        elif command[0] == "/join":
+            print("Error: You are already connected to the server.")
+        elif command[0] == "/all":
+            all_message = command[]
+
+            #insert broadcast and pass its params here
+            #broadcast()
+        elif command[0] == "/msg":
+            #insert unicast and pass its params here
+            #unicast()
+        #else assumes hindi nag type si user ng slash / command stuff
+        else:
+            print("Error: Please input a proper command or type '/?' to check the list of commands.")
+        
+        
 

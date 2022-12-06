@@ -19,10 +19,10 @@ serverPortNum = 12345
 
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPServerSocket.bind((serverIPAdd, serverPortNum))
+
 print("UDP server up and listening")
 # Bind to address and ip
-
+UDPServerSocket.bind((serverIPAdd, serverPortNum))
 #pass client message as param for this func (change word and clientMessage since they are just placeholders)
 def emotes(clientMessage):
     emote = {
@@ -45,24 +45,35 @@ while True:
         json_data = json.loads(data.decode("utf-8"))
         print("Received message: ", data, "\n from ", address)
         if json_data["command"] == "join":
+            bytesToSend = str.encode("Connection to the Message Board Server is successful!")
+            UDPServerSocket.sendto(bytesToSend, address)
+            '''
             command = bytes(json.dumps({"command": "join"}), "utf-8")
-            UDPServerSocket.sendto(command, address)
-            print("message sent")
+            '''
         elif json_data["command"] == "register":
             if json_data["handle"] in handles:
-                command = bytes(json.dumps({"command": "error", "message": "Error: Registration failed. Handle or alias already exists."}), "utf-8")
-                UDPServerSocket.sendto(command, address)
+                bytesToSend = str.encode("Error: Registration failed. Handle or alias already exists.")
+                UDPServerSocket.sendto(bytesToSend, address)
             else:
                 handles.append(json_data["handle"])
                 port_address.append(address)
                 name = json_data["handle"]
                 print(handles)
                 print(port_address)
-                
                 for pa in port_address:
-                    welcome = "Welcome " + name
+                    welcome = "Welcome " + name +"!"
                     welcome_bytes = str.encode(welcome)
-                    UDPServerSocket.sendto(command, pa)
+                    UDPServerSocket.sendto(welcome_bytes, pa)
+        elif json_data["command"] == "leave":
+            try:
+                index = port_address.index(address)
+                handles.pop(index)
+                port_address.pop(index)
+                print(handles)
+                print(port_address)
+            except:
+                pass
+                
                     
                     
                 
