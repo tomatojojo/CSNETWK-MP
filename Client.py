@@ -54,6 +54,37 @@ def receive():
             else:
                 print("")
 
+#pass params to this func
+def broadcast():
+    #adjust allMessage to the json stuff
+    allMessage = "change me".encode()
+
+    for address in allConnectionsList:
+        if(address in registered and address != sender):
+            #change server socket to whatever the server socket is called because idk if its the udpclientsocket
+            serverSocket.sendto(allMessage, address)
+
+    return allMessage
+
+#pass params to this func
+def unicast():
+    #change receiverhandle and senderAddress
+    if (receiverHandle in registered):
+        receiver = registered(receiverHandle)
+        sender = registered[senderAddress]
+
+        receiverMessage = "(From " + str(sender) + ") " + clientMessage
+        senderResponse = "(To " + str(receiver) + ") " + clientMessage
+
+        receiverMessage.encode()
+        senderResponse.encode()
+
+        serverSocket.sendto(receiverMessage, receiver)
+    else:
+        senderResponse = "Error: Handle is not found in the server.".encode()
+
+    return senderResponse
+
 
 
 while joined == False:
@@ -90,6 +121,26 @@ while joined and not registered:
         else:
             register_command["handle"] = command[1]
             UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
-            
+
+while joined and registered:
+    command = input("Enter command or message: \n")
+    command = command.split()
+
+    if command[0] == "/leave":
+        #insert serverPort and serverIP to None or 0
+        print("Successfully disconnected from the server.")
+    elif command[0] == "/register":
+        print("Error: You are already registered!")
+    elif command[0] == "/join":
+        print("Error: You are already connected to the server.")
+    elif command[0] == "/all":
+        #insert broadcast and pass its params here
+        broadcast()
+    elif command[0] == "/msg":
+        unicast()
+    #else assumes hindi nag type si user ng slash / command stuff
+    else:
+        print("Error: Please input a proper command or type '/?' to check the list of commands.")
+    
     
 
