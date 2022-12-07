@@ -67,7 +67,8 @@ def receive():
 while True:
     while joined == False:
         command = input("Enter /join <ip adress> <portnum> to join a server \n")
-        numwords = len(re.findall(r'\w+', command))
+        numwords = len(command.split())
+        print(numwords)
         command = command.split()
         if command[0] == "/join":
             if numwords != 3:
@@ -76,8 +77,11 @@ while True:
                 ip_adress = command[1]
                 try:
                     host = int(command[2])
+                    print("converted host")
                     UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+                    print("json sent")
                     joined = receive_join()
+                    print("joined")
                 except:
                     print("Error: Command parameters do not match or is not allowed.")
                 
@@ -114,7 +118,7 @@ while True:
 
     while joined and not registered:
         command = input("Enter /register <handle> to join a server \n")
-        numwords = len(re.findall(r'\w+', command))
+        numwords = len(command.split())
         command = command.split()
         if command[0] == "/register":
             if numwords != 2:
@@ -158,7 +162,7 @@ while True:
 
     while joined and registered:
         command = input("Enter command: \n")
-        numwords = len(re.findall(r'\w+', command))
+        numwords = len(command.split())
         command = command.split()
 
         if command[0] == "/leave":
