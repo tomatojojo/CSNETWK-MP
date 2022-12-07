@@ -71,8 +71,43 @@ while True:
                 port_address.pop(index)
                 print(handles)
                 print(port_address)
+                leave_message = "Connection closed. Thank you!"
+                leave_message_bytes = str.encode(leave_message)
+                UDPServerSocket.sendto(leave_message, address)
             except:
-                pass
+                leave_message = "Connection closed. Thank you!"
+                leave_message_bytes = str.encode(leave_message)
+                UDPServerSocket.sendto(leave_message, address)
+        elif json_data["command"] == "error":
+            error_message = json_data["message"]
+            error_message_bytes = str.encode(error_message)
+            UDPServerSocket.sendto(error_message_bytes, address)
+
+        elif json_data["command"] == "msg":
+            if json_data['handle'] in handles:
+
+                receiver = json_data['handle']
+                index = handles.index(receiver)
+                destination_address = port_address[index]
+
+                index2 = port_address.index(address)
+                sender = handles[index2]
+                sender_message = ("[From " + sender + "]: " + json_data["message"])
+                receiver_message = ("[To " + receiver + "]: " + json_data["message"])
+                sender_message_bytes = str.encode(sender_message)
+                receiver_message_bytes = str.encode(receiver_message)
+
+                #sender
+                UDPServerSocket.sendto(sender_message_bytes, address)
+                #receiver 
+                UDPServerSocket.sendto(receiver_message_bytes, destination_address)
+            else:
+                error_message = "Error: Handle or alias not found."
+                error_message_bytes = str.encode(error_message)
+                UDPServerSocket.sendto(error_message_bytes, address)
+
+
+
                 
                     
                     
