@@ -48,17 +48,15 @@ def receive_join():
                 return False
         
 def receive():
+        
         data, _ = UDPClientSocket.recvfrom(1024)
+        print(data)
         data = data.decode()
         data_splitted = data.split()
         if data_splitted[0] == "Error:":
             print(data)
-            if registered == False:
-                registered = False
         elif data_splitted[0] == "Welcome!":
             print(data)
-            if registered == False:
-                registered = True
         else:
             print(data)
 #senderResponse
@@ -146,14 +144,14 @@ while True:
                 error_command["message"] = "Error: Command parameters do not match or is not allowed."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
-                error_command["message"] = "Please connect to the server first before sending a message to all"
+                error_command["message"] = "Please register to the server first before sending a message to all"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         elif command[0] =="/msg":
             if numwords <= 2:
                 error_command["message"] = "Error: Command parameters do not match or is not allowed."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
-                error_command["message"] = "Please connect to the server first before sending a message to another client"
+                error_command["message"] = "Please register to the server first before sending a message to another client"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         elif command[0] == "/?":
             if numwords > 1: 
