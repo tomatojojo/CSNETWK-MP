@@ -34,20 +34,7 @@ def helperCall():
     print("---------------------------------------------------------------------------------------------------------")
     print("\n")
 
-def receive_join():
-    while True:
-        try:
-            print("inside func")
-            UDPClientSocket.connect((ip_adress, host))
-            print("connected")
-            data, _ = UDPClientSocket.recvfrom(1024)
-            data = data.decode()
-            print(data)
-            return True
-        except:
-            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-            
-        
+
 def receive():
     data, _ = UDPClientSocket.recvfrom(1024)
     print(data)
@@ -60,7 +47,15 @@ def receive():
     else:
         print(data)
 #senderResponse
-
+def receive_true():
+    while True:
+        try:
+            data, rwe = UDPClientSocket.recvfrom(1024)
+            data = data.decode()
+            print(data)
+            joined = True
+        except:
+            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
 
 while joined == False:
     command = input("Enter /join <ip adress> <portnum> to join a server \n")
@@ -79,10 +74,10 @@ while joined == False:
                 print("converted host")
                 print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
                 print("json sent")
-                joined = receive_join()
-                print("func done")
+                joined = receive_true()
             except:
                 print("Error: Command parameters do not match or is not allowed.")
+
     elif command[0] == "/?":
         if numwords > 1: 
             print("Error: Command parameters do not match or is not allowed.")
@@ -114,7 +109,7 @@ while joined == False:
 t1 = threading.Thread(target=receive)
 t1.start()
 
-while joined == true and registered == false:
+while joined == True and registered == False:
     command = input("Enter /register <handle> to join a server \n")
     numwords = len(command.split())
     command = command.split()

@@ -103,7 +103,13 @@ while True:
                 error_message = "Error: Handle or alias not found."
                 error_message_bytes = str.encode(error_message)
                 UDPServerSocket.sendto(error_message_bytes, address)
-
+        elif json_data["command"] == "all":
+                index2 = port_address.index(address)
+                sender = handles[index2]
+                for pa in port_address:
+                    all_msg = sender + ": " + json_data["message"]
+                    all_msg_bytes = str.encode(all_msg)
+                    UDPServerSocket.sendto(all_msg_bytes, pa)
 
 
                 
