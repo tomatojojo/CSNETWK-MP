@@ -196,7 +196,7 @@ while joined and registered:
             error_command["message"] = "Error: Command parameters do not match or is not allowed."
             UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         else:
-            all_message = ''.join(command[1:])
+            all_message = ' '.join(command[1:])
             all_message_command["message"] = all_message
             UDPClientSocket.sendto(bytes(json.dumps(all_message_command), "utf-8"), (ip_adress, host))
         #insert broadcast and pass its params here
@@ -206,7 +206,7 @@ while joined and registered:
             error_command["message"] = "Error: Command parameters do not match or is not allowed."
             UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         else:
-            direct_message = ''.join(command[2:])
+            direct_message = ' '.join(command[2:])
             direct_message_command['handle'] = command[1]
             direct_message_command['message'] = direct_message
             UDPClientSocket.sendto(bytes(json.dumps(direct_message_command), "utf-8"), (ip_adress, host))
