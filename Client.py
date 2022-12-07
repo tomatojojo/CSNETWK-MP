@@ -35,14 +35,18 @@ def helperCall():
     print("\n")
 
 def receive_join():
-    try:
-        print("inside func")
-        data, _ = UDPClientSocket.recv(1024)
-        data = data.decode()
-        return True
-    except:
-        print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-        return False
+    while True:
+        try:
+            print("inside func")
+            UDPClientSocket.connect((ip_adress, host))
+            print("connected")
+            data, _ = UDPClientSocket.recvfrom(1024)
+            data = data.decode()
+            print(data)
+            return True
+        except:
+            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+            
         
 def receive():
     data, _ = UDPClientSocket.recvfrom(1024)
@@ -75,7 +79,7 @@ while joined == False:
                 print("converted host")
                 print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
                 print("json sent")
-                UDPClientSocket.recvfrom(1024)
+                joined = receive_join()
                 print("func done")
             except:
                 print("Error: Command parameters do not match or is not allowed.")
@@ -110,7 +114,7 @@ while joined == False:
 t1 = threading.Thread(target=receive)
 t1.start()
 
-while joined and not registered:
+while joined == true and registered == false:
     command = input("Enter /register <handle> to join a server \n")
     numwords = len(command.split())
     command = command.split()
