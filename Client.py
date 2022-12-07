@@ -50,17 +50,16 @@ def receive():
             print(data)
 #senderResponse
 def receive_true():
-    try:
-        data, rwe = UDPClientSocket.recvfrom(bufsize = 1024)
-        data = data.decode()
-        print(data)
-        joined = True
-        return True
-        running = False
-    except:
-        print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-        return False
-        running = False
+    while True:
+        try:
+            data, rwe = UDPClientSocket.recvfrom(bufsize = 1024)
+            data = data.decode()
+            print(data)
+            return True
+        except:
+            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+            return False
+        
 
 while joined == False:
     command = input("Enter /join <ip adress> <portnum> to join a server \n")
