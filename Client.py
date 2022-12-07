@@ -45,6 +45,7 @@ def receive():
             print(data)
         elif data_splitted[0] == "Welcome!":
             print(data)
+            registered = True
         else:
             print(data)
 #senderResponse
@@ -123,7 +124,6 @@ while joined == True and registered == False:
         else:
             register_command["handle"] = command[1]
             UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
-            registered = True
     elif command[0] == "/leave":
         if numwords > 1:
             error_command["message"] = "Error: Command parameters do not match or is not allowed."
@@ -199,8 +199,6 @@ while joined and registered:
             all_message = ' '.join(command[1:])
             all_message_command["message"] = all_message
             UDPClientSocket.sendto(bytes(json.dumps(all_message_command), "utf-8"), (ip_adress, host))
-        #insert broadcast and pass its params here
-        #broadcast()
     elif command[0] == "/msg":
         if numwords < 3:
             error_command["message"] = "Error: Command parameters do not match or is not allowed."
@@ -210,9 +208,6 @@ while joined and registered:
             direct_message_command['handle'] = command[1]
             direct_message_command['message'] = direct_message
             UDPClientSocket.sendto(bytes(json.dumps(direct_message_command), "utf-8"), (ip_adress, host))
-        #insert unicast and pass its params here
-        #unicast()
-    #else assumes hindi nag type si user ng slash / command stuff
     elif command[0] == "/?":
         if numwords > 1: 
             print("Error: Command parameters do not match or is not allowed.")
@@ -220,38 +215,3 @@ while joined and registered:
             helperCall()
     else:
         print("Error: Please input a proper command or type '/?' to check the list of commands.")
-    
-    
-
-'''
-#pass params to this func
-def broadcast():
-    #adjust allMessage to the json stuff
-    allMessage = "change me".encode()
-
-    for address in allConnectionsList:
-        if(address in registered and address != sender):
-            #change server socket to whatever the server socket is called because idk if its the udpclientsocket
-            serverSocket.sendto(allMessage, address)
-
-    return allMessage
-
-#pass params to this func
-def unicast():
-    #change receiverhandle and senderAddress
-    if (receiverHandle in registered):
-        receiver = registered(receiverHandle)
-        sender = registered[senderAddress]
-
-        receiverMessage = "(From " + str(sender) + ") " + clientMessage
-        senderResponse = "(To " + str(receiver) + ") " + clientMessage
-
-        receiverMessage.encode()
-        senderResponse.encode()
-
-        serverSocket.sendto(receiverMessage, receiver)
-    else:
-        senderResponse = "Error: Handle is not found in the server.".encode()
-
-    return 
-'''
