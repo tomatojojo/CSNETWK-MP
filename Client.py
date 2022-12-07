@@ -16,7 +16,6 @@ error_command = {"command": "error", "message": "message"}
 
 bufferSize = 1024
 joined = False
-global registered
 registered = False
 
 # Create a UDP socket at client side
@@ -37,7 +36,8 @@ def helperCall():
 
 def receive_join():
     try:
-        data, _ = UDPClientSocket.recvfrom(1024)
+        print("inside func")
+        data, _ = UDPClientSocket.recv(1024)
         data = data.decode()
         return True
     except:
@@ -73,9 +73,9 @@ while joined == False:
             try:
                 host = int(command[2])
                 print("converted host")
-                UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+                print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
                 print("json sent")
-                joined = receive_join()
+                UDPClientSocket.recvfrom(1024)
                 print("func done")
             except:
                 print("Error: Command parameters do not match or is not allowed.")

@@ -13,7 +13,6 @@ error_command = {"command": "error", "message": "message"}
 bufferSize  = 1024
 handles = []
 port_address = []
-messages = queue.Queue()
 serverIPAdd = "127.0.0.1"
 serverPortNum = 12345
 
@@ -32,7 +31,6 @@ def emotes(clientMessage):
         ":sad" : "😔",
         ":angry" : "😠"
     }
-
     return ' '.join(str(emote.get(word, word)) for word in clientMessage)
 
 
