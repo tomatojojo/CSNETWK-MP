@@ -34,18 +34,6 @@ def helperCall():
     print("|   /?                               |    list of commands                                              |")
     print("---------------------------------------------------------------------------------------------------------")
     print("\n")
-
-def receive_join():
-    while True:
-            try:
-                data, _ = UDPClientSocket.recvfrom(1024)
-                #json_data = json.loads(data.decode("utf-8"))
-                data = data.decode()
-                print(data) 
-                return True
-            except:
-                print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-                return False
         
 def receive():
         data, _ = UDPClientSocket.recvfrom(1024)
@@ -142,7 +130,7 @@ while True:
                 error_command["message"] = "You have already joined the server"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         elif command[0] =="/all":
-            if numword != 2:
+            if numword < 2:
                 error_command["message"] = "Error: Command parameters do not match or is not allowed."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
