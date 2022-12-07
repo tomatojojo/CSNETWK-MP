@@ -76,15 +76,12 @@ while True:
                 check_port = command[2]
                 print(command[2])
                 try:
-                    if ip_adress == "127.0.0.1" and check_port == "12345":
-                        host = int(command[2])
-                        print("converted host")
-                        UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
-                        print("json sent")
-                        joined = receive_join()
-                        print("joined")
-                    else:
-                        print("WRONG IP OR PORT")
+                    host = int(command[2])
+                    print("converted host")
+                    UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
+                    print("json sent")
+                    joined = receive_join()
+                    print("joined")
                 except:
                     print("Error: Command parameters do not match or is not allowed.")
                 
