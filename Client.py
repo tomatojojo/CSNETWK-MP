@@ -54,8 +54,10 @@ def receive_true():
             data = data.decode()
             print(data)
             joined = True
+            return True
         except:
             print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+            return False
 
 while joined == False:
     command = input("Enter /join <ip adress> <portnum> to join a server \n")

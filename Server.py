@@ -44,14 +44,14 @@ while True:
         print("Received message: ", data, "\n from ", address)
         if json_data["command"] == "join":
             bytesToSend = str.encode("Connection to the Message Board Server is successful!")
-            UDPServerSocket.sendto(bytesToSend, address)
+            UDPServerSocket.sendto(bytes(bytesToSend, address))
             '''
             command = bytes(json.dumps({"command": "join"}), "utf-8")
             '''
         elif json_data["command"] == "register":
             if json_data["handle"] in handles:
                 bytesToSend = str.encode("Error: Registration failed. Handle or alias already exists.")
-                UDPServerSocket.sendto(bytesToSend, address)
+                UDPServerSocket.sendto(bytes(bytesToSend, address))
             else:
                 handles.append(json_data["handle"])
                 port_address.append(address)
