@@ -96,9 +96,9 @@ while True:
                 receiver_message_bytes = str.encode(receiver_message)
 
                 #sender
-                UDPServerSocket.sendto(sender_message_bytes, address)
+                UDPServerSocket.sendto(sender_message_bytes, destination_address)
                 #receiver 
-                UDPServerSocket.sendto(receiver_message_bytes, destination_address)
+                UDPServerSocket.sendto(receiver_message_bytes, address)
             else:
                 error_message = "Error: Handle or alias not found."
                 error_message_bytes = str.encode(error_message)
