@@ -47,20 +47,19 @@ def receive_join():
                 print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
         
 def receive():
-    while registered == True:
-            data, _ = UDPClientSocket.recvfrom(1024)
-            data = data.decode()
-            data_splitted = data.split()
-            if data_splitted[0] == "Error:":
-                print(data)
-                if registered == False:
-                    registered = False
-            elif data_splitted[0] == "Welcome!":
-                print(data)
-                if registered == False:
-                    registered = True
-            else:
-                print(data)
+        data, _ = UDPClientSocket.recvfrom(1024)
+        data = data.decode()
+        data_splitted = data.split()
+        if data_splitted[0] == "Error:":
+            print(data)
+            if registered == False:
+                registered = False
+        elif data_splitted[0] == "Welcome!":
+            print(data)
+            if registered == False:
+                registered = True
+        else:
+            print(data)
 #senderResponse
 
 
