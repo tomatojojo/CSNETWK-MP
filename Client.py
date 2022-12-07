@@ -16,7 +16,7 @@ error_command = {"command": "error", "message": "message"}
 
 bufferSize = 1024
 joined = False
-# global registered
+global registered
 registered = False
 
 # Create a UDP socket at client side
