@@ -78,6 +78,7 @@ while True:
                 leave_message = "Connection closed. Thank you!"
                 leave_message_bytes = str.encode(leave_message)
                 UDPServerSocket.sendto(leave_message, address)
+                
         elif json_data["command"] == "error":
             error_message = json_data["message"]
             error_message_bytes = str.encode(error_message)

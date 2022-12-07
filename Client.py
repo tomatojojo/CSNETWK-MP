@@ -34,6 +34,18 @@ def helperCall():
     print("|   /?                               |    list of commands                                              |")
     print("---------------------------------------------------------------------------------------------------------")
     print("\n")
+
+def receive_join():
+    while True:
+            try:
+                data, _ = UDPClientSocket.recvfrom(1024)
+                #json_data = json.loads(data.decode("utf-8"))
+                data = data.decode()
+                print(data) 
+                return True
+            except:
+                print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+                return False
         
 def receive():
         data, _ = UDPClientSocket.recvfrom(1024)
