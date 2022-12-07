@@ -48,7 +48,7 @@ def receive_join():
                 return False
         
 def receive():
-    while True:
+        
         data, _ = UDPClientSocket.recvfrom(1024)
         print(data)
         data = data.decode()

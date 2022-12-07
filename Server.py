@@ -83,7 +83,6 @@ while True:
             error_message = json_data["message"]
             error_message_bytes = str.encode(error_message)
             UDPServerSocket.sendto(error_message_bytes, address)
-            
         elif json_data["command"] == "msg":
             if json_data['handle'] in handles:
 
