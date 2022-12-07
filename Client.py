@@ -45,6 +45,7 @@ def receive_join():
                 return True
             except:
                 print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+                return False
         
 def receive():
         data, _ = UDPClientSocket.recvfrom(1024)
