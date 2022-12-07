@@ -76,7 +76,7 @@ while joined == False:
                 UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
                 print("json sent")
                 joined = receive_join()
-                print("joined")
+                print("func done")
             except:
                 print("Error: Command parameters do not match or is not allowed.")
     elif command[0] == "/?":
