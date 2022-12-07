@@ -142,14 +142,14 @@ while True:
                 error_command["message"] = "You have already joined the server"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         elif command[0] =="/all":
-            if numword != 2:
+            if numwords != 2:
                 error_command["message"] = "Error: Command parameters do not match or is not allowed."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
                 error_command["message"] = "Please connect to the server first before sending a message to all"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
         elif command[0] =="/msg":
-            if numword <= 2:
+            if numwords <= 2:
                 error_command["message"] = "Error: Command parameters do not match or is not allowed."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
