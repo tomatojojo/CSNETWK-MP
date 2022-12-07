@@ -155,6 +155,12 @@ while True:
             else:
                 error_command["message"] = "Please connect to the server first before sending a message to another client"
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+        elif command[0] == "/?":
+            if numwords > 1: 
+                error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+            else:
+                helperCall()
         else:
                 error_command["message"] = "Error: Command not found."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
