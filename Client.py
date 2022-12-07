@@ -36,16 +36,17 @@ def helperCall():
 
 
 def receive():
-    data, _ = UDPClientSocket.recvfrom(1024)
-    print(data)
-    data = data.decode()
-    data_splitted = data.split()
-    if data_splitted[0] == "Error:":
+    while True:
+        data, _ = UDPClientSocket.recvfrom(1024)
         print(data)
-    elif data_splitted[0] == "Welcome!":
-        print(data)
-    else:
-        print(data)
+        data = data.decode()
+        data_splitted = data.split()
+        if data_splitted[0] == "Error:":
+            print(data)
+        elif data_splitted[0] == "Welcome!":
+            print(data)
+        else:
+            print(data)
 #senderResponse
 def receive_true():
     while True:
@@ -122,6 +123,7 @@ while joined == True and registered == False:
         else:
             register_command["handle"] = command[1]
             UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+            registered = True
     elif command[0] == "/leave":
         if numwords > 1:
             error_command["message"] = "Error: Command parameters do not match or is not allowed."
