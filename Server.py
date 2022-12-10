@@ -33,11 +33,11 @@ while True:
     except:
         pass
     finally:
-        data = data.decode("utf-8")
-        json_data = json.loads(data)
+        encoded_data = data.decode("utf-8")
+        json_data = json.loads(encoded_data)
         print("Received message: ", data, "\n from ", address)
         print(json_data)
-        print(data)
+        print(encoded_data)
         if json_data["command"] == "join":
             print("went to join")
             bytesToSend = str.encode("Connection to the Message Board Server is successful!")

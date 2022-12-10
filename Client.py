@@ -20,7 +20,6 @@ registered = False
 
 # Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
 def helperCall():
     print("\n---------------------------------------------------------------------------------------------------------")
     print("|   List of Commands:                |    Function                                                      |")
@@ -38,29 +37,28 @@ def helperCall():
 
 def receive():
     while True:
-        UDPClientSocket.settimeout(1)
         data, _ = UDPClientSocket.recvfrom(1024)
         print(data)
-        data = data.decode()
-        data_splitted = data.split()
+        decoded_data = data.decode()
+        data_splitted = decoded_data.split()
         if data_splitted[0] == "Error:":
-            print(data)
+            print(decoded_data)
         elif data_splitted[0] == "Welcome!":
-            print(data)
+            print(decoded_data)
             registered = True
         else:
-            print(data)
+            print(decoded_data)
 #senderResponse
 def receive_true():
-    while True:
-        try:
-            data, _ = UDPClientSocket.recvfrom(1024)
-            data = data.decode()
-            print(data)
-            return True
-        except:
-            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-            return False
+    UDPClientSocket.settimeout(1)
+    try:
+        data, _ = UDPClientSocket.recvfrom(1024)
+        data = data.decode()
+        print(data)
+        return True
+    except:
+        print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+        return False
         
 
 while joined == False:
@@ -82,6 +80,7 @@ while joined == False:
                 print("json sent")
                 joined = receive_true()
             except:
+                print("wernt to except")
                 print("Error: Command parameters do not match or is not allowed.")
 
     elif command[0] == "/?":
@@ -111,9 +110,10 @@ while joined == False:
             print("Please connect to the server first before sending a message")
     else:
         print("Error: Command not found.")
-
+UDPClientSocket.settimeout(None)
 t1 = threading.Thread(target=receive)
 t1.start()
+
 
 while joined == True and registered == False:
     command = input("Enter /register <handle> to join a server \n")
