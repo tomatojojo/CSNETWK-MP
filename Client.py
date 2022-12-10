@@ -52,7 +52,7 @@ def receive():
 def receive_true():
     while True:
         try:
-            data, rwe = UDPClientSocket.recvfrom(bufsize = 1024)
+            data, _ = UDPClientSocket.recvfrom(1024)
             data = data.decode()
             print(data)
             return True

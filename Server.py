@@ -2,13 +2,6 @@ import socket
 import json
 import queue
 
-#Json Commands
-join_command = {"command": "join"}
-leave_command = {"command": "leave"}
-register_command = {"command": "register", "handle": "handle"}
-all_message_command = {"command": "all", "message": "message"}
-direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
-error_command = {"command": "error", "message": "message"}
 
 bufferSize  = 1024
 handles = []
@@ -40,11 +33,18 @@ while True:
     except:
         pass
     finally:
-        json_data = json.loads(data.decode("utf-8"))
+        data = data.decode("utf-8")
+        json_data = json.loads(data)
         print("Received message: ", data, "\n from ", address)
+        print(json_data)
+        print(data)
         if json_data["command"] == "join":
+            print("went to join")
             bytesToSend = str.encode("Connection to the Message Board Server is successful!")
+            print(bytesToSend)
+            print(address)
             UDPServerSocket.sendto(bytesToSend, address)
+            print("message sent")
             '''
             command = bytes(json.dumps({"command": "join"}), "utf-8")
             '''
@@ -75,8 +75,7 @@ while True:
             except:
                 leave_message = "Connection closed. Thank you!"
                 leave_message_bytes = str.encode(leave_message)
-                UDPServerSocket.sendto(leave_message, address)
-                
+                UDPServerSocket.sendto(leave_message, address)     
         elif json_data["command"] == "error":
             error_message = json_data["message"]
             error_message_bytes = str.encode(error_message)
@@ -94,7 +93,6 @@ while True:
                 receiver_message = ("[To " + receiver + "]: " + json_data["message"])
                 sender_message_bytes = str.encode(sender_message)
                 receiver_message_bytes = str.encode(receiver_message)
-
                 #sender
                 UDPServerSocket.sendto(sender_message_bytes, destination_address)
                 #receiver 
