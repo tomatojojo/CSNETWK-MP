@@ -34,6 +34,7 @@ def helperCall():
     print("---------------------------------------------------------------------------------------------------------")
     print("\n")
 
+UDPClientSocket.settimeout(1)
 
 def receive():
     while True:
@@ -50,15 +51,14 @@ def receive():
             print(data)
 #senderResponse
 def receive_true():
-    while True:
-        try:
-            data, _ = UDPClientSocket.recvfrom(1024)
-            data = data.decode()
-            print(data)
-            return True
-        except:
-            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-            return False
+    try:
+        data, _ = UDPClientSocket.recvfrom(1024)
+        data = data.decode()
+        print(data)
+        return True
+    except:
+        print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+        return False
         
 
 while joined == False:
