@@ -57,6 +57,7 @@ while True:
                 else:
                     name = json_data["handle"]
                     handles[index] = name
+                    if_registered[index] = True
                     print(handles)
                     print(port_address)
                     for pa in port_address:

@@ -33,13 +33,17 @@ def helperCall():
 
 
 def receive():
-    global can_receive
-    while can_receive:
-        data = ''
-        data, _ = UDPClientSocket.recvfrom(1024)
-        decoded_data = data.decode()
-        data_splitted = decoded_data.split()
-        print(decoded_data)
+    while True:
+        try:
+            global can_receive
+            while can_receive:
+                data = ''
+                data, _ = UDPClientSocket.recvfrom(1024)
+                decoded_data = data.decode()
+                data_splitted = decoded_data.split()
+                print(decoded_data)
+        except:
+            pass
 #senderResponse
 def main():
     bufferSize = 1024
@@ -109,7 +113,7 @@ def main():
         UDPClientSocket.settimeout(None)
         t1 = threading.Thread(target=receive)
         t1.start()
-        print("Enter /register <handle> to join a server \n")
+        print("Enter /register <handle> to join a server")
         while joined == True:
             command = ''
             command = input()
