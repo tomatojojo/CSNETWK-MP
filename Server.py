@@ -55,65 +55,82 @@ while True:
                     bytesToSend = str.encode("Error: Registration failed. Handle or alias already exists.")
                     UDPServerSocket.sendto(bytesToSend, address)
                 else:
-                    handles.append(json_data["handle"])
-                    port_address.append(address)
                     name = json_data["handle"]
+                    handles[index] = name
                     print(handles)
                     print(port_address)
                     for pa in port_address:
-                        welcome = "Welcome " + name +"!"
-                        welcome_bytes = str.encode(welcome)
-                        UDPServerSocket.sendto(welcome_bytes, pa)
+                        print(pa)
+                        index_receiver = port_address.index(pa)
+                        if if_registered[index_receiver] == True:
+                            welcome = "Welcome " + name +"!"
+                            welcome_bytes = str.encode(welcome)
+                            UDPServerSocket.sendto(welcome_bytes, pa)
             else:
                 bytesToSend = str.encode("You have already registered")
-                UDPServerSocket.sendto(bytesToSend, address)
-                    
+                UDPServerSocket.sendto(bytesToSend, address)          
         elif json_data["command"] == "leave":
             try:
                 index = port_address.index(address)
+                if_registered.pop(index)
                 handles.pop(index)
                 port_address.pop(index)
                 print(handles)
                 print(port_address)
+                print(if_registered)
                 leave_message = "Connection closed. Thank you!"
                 leave_message_bytes = str.encode(leave_message)
                 UDPServerSocket.sendto(leave_message, address)
             except:
                 leave_message = "Connection closed. Thank you!"
                 leave_message_bytes = str.encode(leave_message)
-                UDPServerSocket.sendto(leave_message, address)     
+                UDPServerSocket.sendto(leave_message_bytes, address)     
         elif json_data["command"] == "error":
             error_message = json_data["message"]
             error_message_bytes = str.encode(error_message)
             UDPServerSocket.sendto(error_message_bytes, address)
+
         elif json_data["command"] == "msg":
-            if json_data['handle'] in handles:
+            index_registered = port_address.index(address)
+            if if_registered[index_registered] == True:
+                if json_data['handle'] in handles:
+                    receiver = json_data['handle']
+                    index = handles.index(receiver)
+                    destination_address = port_address[index]
 
-                receiver = json_data['handle']
-                index = handles.index(receiver)
-                destination_address = port_address[index]
-
-                index2 = port_address.index(address)
-                sender = handles[index2]
-                sender_message = ("[From " + sender + "]: " + json_data["message"])
-                receiver_message = ("[To " + receiver + "]: " + json_data["message"])
-                sender_message_bytes = str.encode(sender_message)
-                receiver_message_bytes = str.encode(receiver_message)
-                #sender
-                UDPServerSocket.sendto(sender_message_bytes, destination_address)
-                #receiver 
-                UDPServerSocket.sendto(receiver_message_bytes, address)
+                    index2 = port_address.index(address)
+                    sender = handles[index2]
+                    sender_message = ("[From " + sender + "]: " + json_data["message"])
+                    receiver_message = ("[To " + receiver + "]: " + json_data["message"])
+                    sender_message_bytes = str.encode(sender_message)
+                    receiver_message_bytes = str.encode(receiver_message)
+                    #sender
+                    UDPServerSocket.sendto(sender_message_bytes, destination_address)
+                    #receiver 
+                    UDPServerSocket.sendto(receiver_message_bytes, address)
+                else:
+                    error_message = "Error: Handle or alias not found."
+                    error_message_bytes = str.encode(error_message)
+                    UDPServerSocket.sendto(error_message_bytes, address)
             else:
-                error_message = "Error: Handle or alias not found."
+                error_message = "Please register to the server first before sending a message to another client"
                 error_message_bytes = str.encode(error_message)
                 UDPServerSocket.sendto(error_message_bytes, address)
         elif json_data["command"] == "all":
+            index_registered = port_address.index(address)
+            if if_registered[index_registered] == True:
                 index2 = port_address.index(address)
                 sender = handles[index2]
                 for pa in port_address:
-                    all_msg = sender + ": " + json_data["message"]
-                    all_msg_bytes = str.encode(all_msg)
-                    UDPServerSocket.sendto(all_msg_bytes, pa)
+                    index_receiver = port_address.index(pa)
+                    if if_registered[index_receiver] == True:
+                        all_msg = sender + ": " + json_data["message"]
+                        all_msg_bytes = str.encode(all_msg)
+                        UDPServerSocket.sendto(all_msg_bytes, pa)
+            else:
+                error_message = "Please register to the server first before sending a message to another client"
+                error_message_bytes = str.encode(error_message)
+                UDPServerSocket.sendto(error_message_bytes, address)
 
 
                 

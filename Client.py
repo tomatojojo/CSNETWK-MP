@@ -1,7 +1,7 @@
 import socket
 import json
 import threading
-import re
+
 '''
 msgFromClient       = "Hello UDP Server"
 bytesToSend         = str.encode(msgFromClient)
@@ -14,9 +14,6 @@ all_message_command = {"command": "all", "message": "message"}
 direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
 error_command = {"command": "error", "message": "message"}
 
-bufferSize = 1024
-joined = False
-registered = False
 
 # Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -36,135 +33,140 @@ def helperCall():
 
 
 def receive():
-    while True:
+    global can_receive
+    while can_receive:
+        data = ''
         data, _ = UDPClientSocket.recvfrom(1024)
-        print(data)
         decoded_data = data.decode()
         data_splitted = decoded_data.split()
-        if data_splitted[0] == "Error:":
-            print(decoded_data)
-        elif data_splitted[0] == "Welcome!":
-            print(decoded_data)
-            registered = True
-        else:
-            print(decoded_data)
+        print(decoded_data)
 #senderResponse
-def receive_true():
-    UDPClientSocket.settimeout(1)
-    try:
-        data, _ = UDPClientSocket.recvfrom(1024)
-        data = data.decode()
-        print(data)
-        return True
-    except:
-        print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
-        return False
-        
+def main():
+    bufferSize = 1024
+    joined = False
+    registered = False
+    running = True
+    global can_receive
+    can_receive = False
+    while running == True:
+        while joined == False:
+            command = input("Enter /join <ip adress> <portnum> to join a server \n")
+            numwords = len(command.split())
+            #print(numwords)
+            command = command.split()
+            if command[0] == "/join":
+                if numwords != 3:
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    ip_adress = command[1]
+                    check_port = command[2]
+                    print(command[2])
+                    try:
+                        host = int(command[2])
+                        print("converted host")
+                        print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
+                        print("json sent")
+                        try:
+                            data, _ = UDPClientSocket.recvfrom(1024)
+                            data_decoded = data.decode()
+                            print(data_decoded)
+                            joined = True
+                            can_receive = True
+                        except:
+                            print("Error: Connection to the Message Board Server has failed! Please check IP Address and Port Number.")
+                            joined = False
+                    except:
+                        print("Error: Command parameters do not match or is not allowed.")
+                    finally:
+                        UDPClientSocket.settimeout(1)
+            elif command[0] == "/?":
+                if numwords > 1: 
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    helperCall()
+            elif command[0] =="/leave":
+                if numwords > 1: 
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    print("Error: Disconnection failed. Please connect to the server first.")
+            elif command[0] =="/register":
+                if numwords != 2:
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    print("Please connect to the server first before creating a handle")
+            elif command[0] =="/all":
+                if numwords < 2:
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    print("Please connect to the server first before sending a message")
+            elif command[0] =="/msg":
+                if numwords <= 2:
+                    print("Error: Command parameters do not match or is not allowed.")
+                else:
+                    print("Please connect to the server first before sending a message")
+            else:
+                print("Error: Command not found.")
+        UDPClientSocket.settimeout(None)
+        t1 = threading.Thread(target=receive)
+        t1.start()
+        print("Enter /register <handle> to join a server \n")
+        while joined == True:
+            command = ''
+            command = input()
+            numwords = len(command.split())
+            command = command.split()
+            if command[0] == "/register":
+                if numwords != 2:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    register_command["handle"] = command[1]
+                    UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
+            elif command[0] == "/leave":
+                if numwords > 1:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    joined = False
+                    UDPClientSocket.sendto(bytes(json.dumps(leave_command), "utf-8"), (ip_adress, host))
+                    can_receive = False
+            elif command[0] == "/join":
+                if numwords > 1:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    error_command["message"] = "You have already joined the server"
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+            elif command[0] =="/all":
+                if numwords < 2:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    all_message = ' '.join(command[1:])
+                    all_message_command["message"] = all_message
+                    UDPClientSocket.sendto(bytes(json.dumps(all_message_command), "utf-8"), (ip_adress, host))
+            elif command[0] =="/msg":
+                if numwords <= 2:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    direct_message = ' '.join(command[2:])
+                    direct_message_command['handle'] = command[1]
+                    direct_message_command['message'] = direct_message
+                    UDPClientSocket.sendto(bytes(json.dumps(direct_message_command), "utf-8"), (ip_adress, host))
+            elif command[0] == "/?":
+                if numwords > 1: 
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                else:
+                    helperCall()
+            else:
+                error_command["message"] = "Error: Command not found."
+                UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
 
-while joined == False:
-    command = input("Enter /join <ip adress> <portnum> to join a server \n")
-    numwords = len(command.split())
-    print(numwords)
-    command = command.split()
-    if command[0] == "/join":
-        if numwords != 3:
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            ip_adress = command[1]
-            check_port = command[2]
-            print(command[2])
-            try:
-                host = int(command[2])
-                print("converted host")
-                print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
-                print("json sent")
-                joined = receive_true()
-            except:
-                print("wernt to except")
-                print("Error: Command parameters do not match or is not allowed.")
 
-    elif command[0] == "/?":
-        if numwords > 1: 
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            helperCall()
-    elif command[0] =="/leave":
-        if numwords > 1: 
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            print("Error: Disconnection failed. Please connect to the server first.")
-    elif command[0] =="/register":
-        if numwords != 2:
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            print("Please connect to the server first before creating a handle")
-    elif command[0] =="/all":
-        if numwords < 2:
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            print("Please connect to the server first before sending a message")
-    elif command[0] =="/msg":
-        if numwords <= 2:
-            print("Error: Command parameters do not match or is not allowed.")
-        else:
-            print("Please connect to the server first before sending a message")
-    else:
-        print("Error: Command not found.")
-UDPClientSocket.settimeout(None)
-t1 = threading.Thread(target=receive)
-t1.start()
-
-
-while joined == True and registered == False:
-    command = input("Enter /register <handle> to join a server \n")
-    numwords = len(command.split())
-    command = command.split()
-    if command[0] == "/register":
-        if numwords != 2:
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            register_command["handle"] = command[1]
-            UDPClientSocket.sendto(bytes(json.dumps(register_command), "utf-8"), (ip_adress, host))
-    elif command[0] == "/leave":
-        if numwords > 1:
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            joined = False
-            UDPClientSocket.sendto(bytes(json.dumps(leave_command), "utf-8"), (ip_adress, host))
-    elif command[0] == "/join":
-        if numwords > 1:
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            error_command["message"] = "You have already joined the server"
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-    elif command[0] =="/all":
-        if numwords < 2:
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            error_command["message"] = "Please register to the server first before sending a message to all"
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-    elif command[0] =="/msg":
-        if numwords <= 2:
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            error_command["message"] = "Please register to the server first before sending a message to another client"
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-    elif command[0] == "/?":
-        if numwords > 1: 
-            error_command["message"] = "Error: Command parameters do not match or is not allowed."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-        else:
-            helperCall()
-    else:
-            error_command["message"] = "Error: Command not found."
-            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
-
-
+main()
+'''
 while joined and registered:
     command = input("Enter command: \n")
     numwords = len(command.split())
@@ -216,3 +218,4 @@ while joined and registered:
             helperCall()
     else:
         print("Error: Please input a proper command or type '/?' to check the list of commands.")
+        '''
