@@ -169,7 +169,6 @@ while joined and registered:
     command = input("Enter command: \n")
     numwords = len(command.split())
     command = command.split()
-
     if command[0] == "/leave":
         #insert serverPort and serverIP to None or 0
         if numwords > 1:

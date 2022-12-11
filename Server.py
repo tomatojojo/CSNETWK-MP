@@ -6,6 +6,7 @@ import queue
 bufferSize  = 1024
 handles = []
 port_address = []
+if_registered = []
 serverIPAdd = "127.0.0.1"
 serverPortNum = 12345
 
@@ -39,29 +40,34 @@ while True:
         print(json_data)
         print(encoded_data)
         if json_data["command"] == "join":
-            print("went to join")
+            handles.append("")
+            port_address.append(address)
+            if_registered.append(False)
             bytesToSend = str.encode("Connection to the Message Board Server is successful!")
-            print(bytesToSend)
-            print(address)
             UDPServerSocket.sendto(bytesToSend, address)
-            print("message sent")
             '''
             command = bytes(json.dumps({"command": "join"}), "utf-8")
             '''
         elif json_data["command"] == "register":
-            if json_data["handle"] in handles:
-                bytesToSend = str.encode("Error: Registration failed. Handle or alias already exists.")
-                UDPServerSocket.sendto(bytesToSend, address)
+            index = port_address.index(address)
+            if if_registered[index] == False:
+                if json_data["handle"] in handles:
+                    bytesToSend = str.encode("Error: Registration failed. Handle or alias already exists.")
+                    UDPServerSocket.sendto(bytesToSend, address)
+                else:
+                    handles.append(json_data["handle"])
+                    port_address.append(address)
+                    name = json_data["handle"]
+                    print(handles)
+                    print(port_address)
+                    for pa in port_address:
+                        welcome = "Welcome " + name +"!"
+                        welcome_bytes = str.encode(welcome)
+                        UDPServerSocket.sendto(welcome_bytes, pa)
             else:
-                handles.append(json_data["handle"])
-                port_address.append(address)
-                name = json_data["handle"]
-                print(handles)
-                print(port_address)
-                for pa in port_address:
-                    welcome = "Welcome " + name +"!"
-                    welcome_bytes = str.encode(welcome)
-                    UDPServerSocket.sendto(welcome_bytes, pa)
+                bytesToSend = str.encode("You have already registered")
+                UDPServerSocket.sendto(bytesToSend, address)
+                    
         elif json_data["command"] == "leave":
             try:
                 index = port_address.index(address)
