@@ -33,15 +33,14 @@ def helperCall():
 
 
 def receive():
-    while True:
+    global can_receive
+    while can_receive:
         try:
-            global can_receive
-            while can_receive:
-                data = ''
-                data, _ = UDPClientSocket.recvfrom(1024)
-                decoded_data = data.decode()
-                data_splitted = decoded_data.split()
-                print(decoded_data)
+            data = ''
+            data, _ = UDPClientSocket.recvfrom(1024)
+            decoded_data = data.decode()
+            data_splitted = decoded_data.split()
+            print(decoded_data)
         except:
             pass
 #senderResponse
