@@ -14,7 +14,7 @@ all_message_command = {"command": "all", "message": "message"}
 direct_message_command = {"command": "msg", "handle": "handle", "message": "message"}
 error_command = {"command": "error", "message": "message"}
 
-
+bufferSize = 1024
 # Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 def helperCall():
@@ -30,14 +30,12 @@ def helperCall():
     print("---------------------------------------------------------------------------------------------------------")
     print("\n")
 
-
-
 def receive():
     global can_receive
     while can_receive:
         try:
             data = ''
-            data, _ = UDPClientSocket.recvfrom(1024)
+            data, _ = UDPClientSocket.recvfrom(bufferSize)
             decoded_data = data.decode()
             data_splitted = decoded_data.split()
             print(decoded_data)
@@ -45,9 +43,8 @@ def receive():
             pass
 #senderResponse
 def main():
-    bufferSize = 1024
     joined = False
-    registered = False
+    #registered = False
     running = True
     global can_receive
     can_receive = False
@@ -62,15 +59,15 @@ def main():
                     print("Error: Command parameters do not match or is not allowed.")
                 else:
                     ip_adress = command[1]
-                    check_port = command[2]
-                    print(command[2])
+                    #check_port = command[2]
+                    #print(command[2])
                     try:
                         host = int(command[2])
-                        print("converted host")
+                        #print("converted host")
                         print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
-                        print("json sent")
+                        #print("json sent")
                         try:
-                            data, _ = UDPClientSocket.recvfrom(1024)
+                            data, _ = UDPClientSocket.recvfrom(bufferSize)
                             data_decoded = data.decode()
                             print(data_decoded)
                             joined = True
@@ -138,7 +135,7 @@ def main():
                     error_command["message"] = "Error: Command parameters do not match or is not allowed."
                     UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
                 else:
-                    error_command["message"] = "You have already joined the server"
+                    error_command["message"] = "You have already joined the server."
                     UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             elif command[0] =="/all":
                 if numwords < 2:
