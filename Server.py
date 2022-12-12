@@ -136,49 +136,43 @@ while True:
                 error_message = "Please register to the server first before sending a message to another client"
                 error_message_bytes = str.encode(error_message)
                 UDPServerSocket.sendto(error_message_bytes, address)
+        elif json_data["command"] == "multicast":
+            index_registered = port_address.index(address)
+            if  if_registered[index_registered] == True:
+                handdles_list = json_data["handle"]
+                x = 0
+                highest = json_data["numhandles"]
+                for x in range(highest):
+                    if x in handles:
+                        receiver = x
+                        index = handles.index(receiver)
+                        destination_address = port_address[index]
 
-
-                
-                    
-                    
-                
-
-
-'''
-messages = queue.Queue()
-clients = []
-
-server = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-server.bind(("localhost", 3000))
-
-def receive():
-    while True:
-        try:
-            message, address= server.recvfrom(2048)
-            messages.put((message, address))
-        except:
-            pass
-
-def broadcast():
-    while True:
-        while not messages.empty():
-            message, address = messages.get()
-            print(message.decode())
-            if address not in clients:
-                clients.append(address)
-            for client in clients:
-                try:
-                    if message.decode().startswith("Online Tag:"):
-                        name = message.decode()[message.decode().index(":")+1:]
-                        server.sendto(f"{name} joined!".encode(), client)
+                        index2 = port_address.index(address)
+                        sender = handles[index2]
+                        sender_message = ("[From " + sender + "]: " + convertEmoji(json_data["message"]))
+                        receiver_message = ("[To " + receiver + "]: " + convertEmoji(json_data["message"]))
+                        sender_message_bytes = str.encode(sender_message)
+                        receiver_message_bytes = str.encode(receiver_message)
+                        #sender
+                        UDPServerSocket.sendto(sender_message_bytes, destination_address)
+                        #receiver 
+                        UDPServerSocket.sendto(receiver_message_bytes, address)
                     else:
-                        server.sendto(message, client)
-                except:
-                    clients.remove(client)
+                        error_message = x + " is not found"
+                        error_message_bytes = str.encode(error_message)
+                        UDPServerSocket.sendto(error_message_bytes, address)
+            else:
+                error_message = "Please register to the server first before sending a message to another client"
+                error_message_bytes = str.encode(error_message)
+                UDPServerSocket.sendto(error_message_bytes, address)
+            
 
-t1 = threading.Thread(target=receive)
-t2 = threading.Thread(target=broadcast)
 
-t1.start()
-t2.start()
-'''
+                
+                    
+                    
+                
+
+
+
