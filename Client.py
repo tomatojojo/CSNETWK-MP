@@ -170,21 +170,26 @@ def main():
                 else:
                     helperCall()
             elif command[0] == "/multicast":
-                if command[1].isnumeric():
-                    num_receiver = int(command[1])
-                    filtered = numwords - 2
-                    if filtered > num_receiver and num_receiver >= 2:
-                        for x in range(2, 2 + num_receiver):
-                            multicast_command["handle"].append(command[x])
-                        multicast_msg = ' '.join(command[num_receiver + 2:])
-                        multicast_command["message"] = multicast_msg
-                        multicast_command["numhandles"] = num_receiver
-                        UDPClientSocket.sendto(bytes(json.dumps(multicast_command), "utf-8"), (ip_adress, host))
+                try:
+                    if command[1].isnumeric():
+                        num_receiver = int(command[1])
+                        filtered = numwords - 2
+                        if filtered > num_receiver and num_receiver >= 2:
+                            for x in range(2, 2 + num_receiver):
+                                multicast_command["handle"].append(command[x])
+                            multicast_msg = ' '.join(command[num_receiver + 2:])
+                            multicast_command["message"] = multicast_msg
+                            multicast_command["numhandles"] = num_receiver
+                            UDPClientSocket.sendto(bytes(json.dumps(multicast_command), "utf-8"), (ip_adress, host))
+                        else:
+                            error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                            UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
                     else:
-                        print("Error: Command parameters do not match or is not allowed.")
-                else:
-                    print()
-                    print("Error: Command parameters do not match or is not allowed.") 
+                        error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                        UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
+                except:
+                    error_command["message"] = "Error: Command parameters do not match or is not allowed."
+                    UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
             else:
                 error_command["message"] = "Error: Command not found."
                 UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
