@@ -64,7 +64,7 @@ def main():
                     try:
                         host = int(command[2])
                         #print("converted host")
-                        print(UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host)))
+                        UDPClientSocket.sendto(bytes(json.dumps(join_command), "utf-8"), (ip_adress, host))
                         #print("json sent")
                         try:
                             data, _ = UDPClientSocket.recvfrom(bufferSize)
