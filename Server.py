@@ -143,8 +143,8 @@ while True:
                 x = 0
                 highest = json_data["numhandles"]
                 for x in range(highest):
-                    if x in handles:
-                        receiver = x
+                    if handdles_list[x] in handles:
+                        receiver = handdles_list[x]
                         index = handles.index(receiver)
                         destination_address = port_address[index]
 
@@ -159,7 +159,7 @@ while True:
                         #receiver 
                         UDPServerSocket.sendto(receiver_message_bytes, address)
                     else:
-                        error_message = x + " is not found"
+                        error_message = handdles_list[x] + " is not found"
                         error_message_bytes = str.encode(error_message)
                         UDPServerSocket.sendto(error_message_bytes, address)
             else:
