@@ -169,7 +169,7 @@ def main():
                     UDPClientSocket.sendto(bytes(json.dumps(error_command), "utf-8"), (ip_adress, host))
                 else:
                     helperCall()
-            elif command[0] == "multicast":
+            elif command[0] == "/multicast":
                 if command[1].isnumeric():
                     num_receiver = int(command[1])
                     filtered = numwords - 2
@@ -179,6 +179,7 @@ def main():
                         multicast_msg = ' '.join(command[num_receiver + 2:])
                         multicast_command["message"] = multicast_msg
                         multicast_command["numhandles"] = num_receiver
+                        UDPClientSocket.sendto(bytes(json.dumps(multicast_command), "utf-8"), (ip_adress, host))
                     else:
                         print("Error: Command parameters do not match or is not allowed.")
                 else:
