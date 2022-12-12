@@ -28,6 +28,14 @@ def helperCall():
     print("|   /msg <handle> <message>          |    messages to another client privately rather than all clients  |")
     print("|   /?                               |    list of commands                                              |")
     print("---------------------------------------------------------------------------------------------------------")
+    print("    *This message board application supports emojis. Terminals like Command Prompt of Windows does not support emojis (due to unsupported unicodes). It is highly suggested to use other terminals.")
+    print("    Emoji Commands:")
+    print("    :heart - 💚")
+    print("    :laugh - 😂")
+    print("    :surprised - 😮")
+    print("    :sad - 😢")
+    print("    :angry - 😠")
+    print("    :thumbsup - 👍")
     print("\n")
 
 def receive():

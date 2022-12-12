@@ -16,16 +16,20 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 print("UDP server up and listening")
 # Bind to address and ip
 UDPServerSocket.bind((serverIPAdd, serverPortNum))
-#pass client message as param for this func (change word and clientMessage since they are just placeholders)
-def emotes(clientMessage):
-    emote = {
-        ":heart" : "❤️",
+
+def convertEmoji(check_message):
+    emoji_message = str(check_message).split()
+    emojiList = {
+        ":heart" : "💚",
         ":laugh" : "😂",
         ":surprised" : "😮",
-        ":sad" : "😔",
-        ":angry" : "😠"
+        ":sad" : "😢",
+        ":angry" : "😠",
+        ":thumbsup": "👍"
     }
-    return ' '.join(str(emote.get(word, word)) for word in clientMessage)
+    # test = ' '.join(str(emojiList.get(word, word)) for word in emoji_message)
+    # print(test)
+    return ' '.join(str(emojiList.get(word, word)) for word in emoji_message)
 
 
 while True:
@@ -101,8 +105,8 @@ while True:
 
                     index2 = port_address.index(address)
                     sender = handles[index2]
-                    sender_message = ("[From " + sender + "]: " + json_data["message"])
-                    receiver_message = ("[To " + receiver + "]: " + json_data["message"])
+                    sender_message = ("[From " + sender + "]: " + convertEmoji(json_data["message"]))
+                    receiver_message = ("[To " + receiver + "]: " + convertEmoji(json_data["message"]))
                     sender_message_bytes = str.encode(sender_message)
                     receiver_message_bytes = str.encode(receiver_message)
                     #sender
@@ -125,7 +129,7 @@ while True:
                 for pa in port_address:
                     index_receiver = port_address.index(pa)
                     if if_registered[index_receiver] == True:
-                        all_msg = sender + ": " + json_data["message"]
+                        all_msg = sender + ": " + convertEmoji(json_data["message"])
                         all_msg_bytes = str.encode(all_msg)
                         UDPServerSocket.sendto(all_msg_bytes, pa)
             else:
