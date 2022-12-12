@@ -17,6 +17,7 @@ print("UDP server up and listening")
 # Bind to address and ip
 UDPServerSocket.bind((serverIPAdd, serverPortNum))
 
+#Code inspiration for emoji from: https://stackoverflow.com/questions/33404752/removing-emojis-from-a-string-in-python?fbclid=IwAR3uUviBbLQz3A6WJJiwrF38ijyg5TRPPsNc96Cql9Y4itoFpWNGZE56ASI
 def convertEmoji(check_message):
     emoji_message = str(check_message).split()
     emojiList = {
