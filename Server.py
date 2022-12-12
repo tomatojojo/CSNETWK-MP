@@ -134,7 +134,7 @@ while True:
                         all_msg_bytes = str.encode(all_msg)
                         UDPServerSocket.sendto(all_msg_bytes, pa)
             else:
-                error_message = "Please register to the server first before sending a message to another client"
+                error_message = "Please register to the server first before sending a message to all"
                 error_message_bytes = str.encode(error_message)
                 UDPServerSocket.sendto(error_message_bytes, address)
         elif json_data["command"] == "multicast":
